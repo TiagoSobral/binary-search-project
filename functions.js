@@ -1,5 +1,4 @@
 #!/usr/bin/node
-
 /* 
 PSEUDOCODE BBST USING RECURSION
 1. From the array separate it in 3 (left, root, right) 
@@ -12,25 +11,46 @@ a child of the root
 6. print the preorder of the tree
 */
 
-/* 
-PSEUDOCODE BBST USING QUEUE
-1. initialize a queue with root node with mid and two variables
-with names start and end.
-2. root node will be from start = 0 to end = n-1.
-3. loop until the queue is empty
-4. remove the first node from the queue with its start and end range
-5. find middle index of the range. 
-6. left subtree range is [start to middle-1] right is [middle=1 to end]
-7. if start is less than middle index, create a left node with value [start to middle-1];
-8. link the root node and left node and push the left node along with range into the queue.
-9. If left subtree exists, that is, if start is less than middle index. 
-Then create the left node with the value equal to middle of range [start, middle-1]. Link the root node and left node and push the left node along withrange into the queue.
-10. If right subtree exists, that is, if end is greater than middle index. Then create the right node with the value equal to middle of range [middle+1, end]. Link the root node and right node and push the right node along range into the queue.
-11. Return the root node.
-*/
+function Node(data, left, right) {
+	return { data, left, right };
+}
 
-function sortArray(array) {
+export function Tree(array = []) {
+	const root = buildTree(array);
+	return { root };
+}
+
+function getSortedArray(array) {
 	let arrayNoDuplicates = Array.from(new Set(array));
 	let sortedArray = arrayNoDuplicates.sort((a, b) => a - b);
-	return sortArray(array);
+	return sortedArray;
 }
+
+function buildTree(array) {
+	const sortedArray = getSortedArray(array);
+	const start = 0;
+	const end = sortedArray.length - 1;
+	const root = Math.round(start + end / 2);
+	const left = sortedArray.slice(start, root);
+	const right = sortedArray.slice(root + 1);
+
+	if (start > end) {
+		return null;
+	} else {
+		let tree = Node(sortedArray[root], buildTree(left), buildTree(right));
+		return tree;
+	}
+}
+
+export const prettyPrint = (node, prefix = '', isLeft = true) => {
+	if (node === null) {
+		return;
+	}
+	if (node.right !== null) {
+		prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
+	}
+	console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`);
+	if (node.left !== null) {
+		prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
+	}
+};
