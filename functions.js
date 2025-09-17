@@ -11,22 +11,47 @@ a child of the root
 6. print the preorder of the tree
 */
 
-function Node(data, left, right) {
+const Node = (data, left = null, right = null) => {
 	return { data, left, right };
-}
+};
 
-export function Tree(array = []) {
+export const Tree = (array = []) => {
 	const root = buildTree(array);
-	return { root };
-}
 
-function getSortedArray(array) {
+	const insert = function insertValue(value) {
+		debugger;
+		let parent = this.root;
+		let leftChild = parent.left;
+		let rightChild = parent.right;
+
+		while (leftChild != null || rightChild != null) {
+			if (value > parent.data) {
+				parent = rightChild;
+				rightChild = rightChild.right;
+				leftChild = parent.left;
+			} else {
+				parent = leftChild;
+				rightChild = parent.right;
+				leftChild = leftChild.left;
+			}
+		}
+
+		if (leftChild == null) {
+			return (parent.left = Node(value));
+		}
+		return (parent.right = Node(value));
+	};
+
+	return { root, insert };
+};
+
+const getSortedArray = function sortedArray(array) {
 	let arrayNoDuplicates = Array.from(new Set(array));
 	let sortedArray = arrayNoDuplicates.sort((a, b) => a - b);
 	return sortedArray;
-}
+};
 
-function buildTree(array) {
+const buildTree = function getBuildedTree(array) {
 	const sortedArray = getSortedArray(array);
 	const start = 0;
 	const end = sortedArray.length - 1;
@@ -40,7 +65,7 @@ function buildTree(array) {
 		let tree = Node(sortedArray[root], buildTree(left), buildTree(right));
 		return tree;
 	}
-}
+};
 
 export const prettyPrint = (node, prefix = '', isLeft = true) => {
 	if (node === null) {
