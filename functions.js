@@ -43,7 +43,6 @@ export const Tree = (array = []) => {
 	};
 
 	const deleteItem = function deleteNode(value) {
-		debugger;
 		let currNode = this.root;
 		let prevNode = null;
 
