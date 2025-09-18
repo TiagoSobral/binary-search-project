@@ -67,11 +67,23 @@ export const Tree = (array = []) => {
 	};
 
 	const find = function findValue(value) {
-		// let currNode = this.root;
-		// while(currNode.data != value || currNode.left != null  currNode.right !==)
+		debugger;
+		let currNode = this.root;
+		while (
+			currNode.data != value ||
+			(currNode.left != null && currNode.right != null)
+		) {
+			if (value > currNode.data) {
+				currNode = currNode.right;
+			} else {
+				currNode = currNode.left;
+			}
+		}
+		if (currNode == null) return 'Not Found!';
+		return currNode;
 	};
 
-	return { root, insert, deleteItem };
+	return { root, insert, deleteItem, find };
 };
 
 const getSortedArray = function sortedArray(array) {
