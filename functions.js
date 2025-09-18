@@ -19,33 +19,24 @@ export const Tree = (array = []) => {
 	const root = buildTree(array);
 
 	const insert = function insertValue(value) {
-		// I don't need to change the left child and right child's value just the parent.
-		let parent = this.root;
-		let leftChild = parent.left;
-		let rightChild = parent.right;
-
-		while (leftChild != null || rightChild != null) {
-			if (value > parent.data) {
-				parent = rightChild;
-				rightChild = rightChild.right;
-				leftChild = parent.left;
+		let currNode = this.root;
+		let prevNode = null;
+		while (currNode != null || currNode != null) {
+			if (value > currNode.data) {
+				prevNode = currNode;
+				currNode = currNode.right;
 			} else {
-				parent = leftChild;
-				rightChild = parent.right;
-				leftChild = leftChild.left;
+				prevNode = currNode;
+				currNode = currNode.left;
 			}
 		}
-
-		if (leftChild == null) {
-			return (parent.left = Node(value));
-		}
-		return (parent.right = Node(value));
+		if (value > prevNode.data) return (prevNode.right = Node(value));
+		return (prevNode.left = Node(value));
 	};
 
 	const deleteItem = function deleteNode(value) {
 		let currNode = this.root;
 		let prevNode = null;
-
 		while (currNode.data != value) {
 			prevNode = currNode;
 			if (value > currNode.data) {
@@ -54,7 +45,6 @@ export const Tree = (array = []) => {
 				currNode = currNode.left;
 			}
 		}
-
 		if (currNode.left == null && currNode.left == null) {
 			if (prevNode.left == currNode) return (prevNode.left = null);
 			return (prevNode.right = null);
@@ -74,6 +64,11 @@ export const Tree = (array = []) => {
 			if (prevNode.left == currNode) return (prevNode.left = currNode.right);
 			return (prevNode.left = currNode.left);
 		}
+	};
+
+	const find = function findValue(value) {
+		// let currNode = this.root;
+		// while(currNode.data != value || currNode.left != null  currNode.right !==)
 	};
 
 	return { root, insert, deleteItem };
