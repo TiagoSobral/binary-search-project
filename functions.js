@@ -67,7 +67,6 @@ export const Tree = (array = []) => {
 	};
 
 	const find = function findValue(value) {
-		debugger;
 		let currNode = this.root;
 		while (
 			currNode.data != value ||
@@ -105,7 +104,6 @@ export const Tree = (array = []) => {
 	const levelOrderForEachRecursion = function callOnEachNodeRecursion(
 		queue = [this.root]
 	) {
-		debugger;
 		if (typeof callback != 'function') throw Error('CallBack Required!');
 		if (queue.length == 0) {
 			return;
@@ -125,12 +123,48 @@ export const Tree = (array = []) => {
 		}
 	};
 
+	const inOrderForEach = function inOrderForEach(callback, root = this.root) {
+		if (typeof callback != 'function') throw Error('CallBack Required!');
+		if (root == null) {
+			return;
+		} else {
+			inOrderForEach(root.left);
+			callback(root);
+			inOrderForEach(root.right);
+		}
+	};
+
+	const preOrderForEach = function inOrderForEach(callback, root = this.root) {
+		if (typeof callback != 'function') throw Error('CallBack Required!');
+		if (root == null) {
+			return;
+		} else {
+			callback(root);
+			inOrderForEach(root.left);
+			inOrderForEach(root.right);
+		}
+	};
+
+	const postOrderForEach = function inOrderForEach(callback, root = this.root) {
+		if (typeof callback != 'function') throw Error('CallBack Required!');
+		if (root == null) {
+			return;
+		} else {
+			inOrderForEach(root.left);
+			inOrderForEach(root.right);
+			callback(root.data);
+		}
+	};
+
 	return {
 		root,
 		insert,
 		deleteItem,
 		find,
 		levelOrderForEach,
+		inOrderForEach,
+		preOrderForEach,
+		postOrderForEach,
 	};
 };
 
