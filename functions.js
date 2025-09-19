@@ -83,7 +83,55 @@ export const Tree = (array = []) => {
 		return currNode;
 	};
 
-	return { root, insert, deleteItem, find };
+	const levelOrderForEach = function callOnEachNode(callback) {
+		if (typeof callback != 'function') throw Error('CallBack Required!');
+		let currNode = this.root;
+		let queue = [currNode];
+		while (queue.length != 0) {
+			let visitingNode = queue[0];
+			let discoveredNodeLeft = visitingNode.left;
+			let discoveredNodeRight = visitingNode.right;
+			callback(visitingNode);
+			queue.splice(0, 1);
+			if (discoveredNodeLeft != null) {
+				queue.push(discoveredNodeLeft);
+			}
+			if (discoveredNodeRight != null) {
+				queue.push(discoveredNodeRight);
+			}
+		}
+	};
+
+	const levelOrderForEachRecursion = function callOnEachNodeRecursion(
+		queue = [this.root]
+	) {
+		debugger;
+		if (typeof callback != 'function') throw Error('CallBack Required!');
+		if (queue.length == 0) {
+			return;
+		} else {
+			let visitingNode = queue[0];
+			let discoveredNodeLeft = visitingNode.left;
+			let discoveredNodeRight = visitingNode.right;
+			callback(visitingNode);
+			queue.splice(0, 1);
+			if (discoveredNodeLeft != null) {
+				queue.push(discoveredNodeLeft);
+			}
+			if (discoveredNodeRight != null) {
+				queue.push(discoveredNodeRight);
+			}
+			levelOrderForEachRecursion(queue);
+		}
+	};
+
+	return {
+		root,
+		insert,
+		deleteItem,
+		find,
+		levelOrderForEach,
+	};
 };
 
 const getSortedArray = function sortedArray(array) {
