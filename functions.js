@@ -68,10 +68,7 @@ export const Tree = (array = []) => {
 
 	const find = function findValue(value) {
 		let currNode = this.root;
-		while (
-			currNode.data != value ||
-			(currNode.left != null && currNode.right != null)
-		) {
+		while (currNode != null && currNode.data != value) {
 			if (value > currNode.data) {
 				currNode = currNode.right;
 			} else {
@@ -102,6 +99,7 @@ export const Tree = (array = []) => {
 	};
 
 	const levelOrderForEachRecursion = function callOnEachNodeRecursion(
+		callback,
 		queue = [this.root]
 	) {
 		if (typeof callback != 'function') throw Error('CallBack Required!');
@@ -156,6 +154,42 @@ export const Tree = (array = []) => {
 		}
 	};
 
+	const height = function getHeight(value) {
+		let edges = -1;
+		let valueFound = this.find(value);
+		if (valueFound.data != value) return null;
+		let queue = [valueFound];
+		while (queue.length > 0) {
+			let visitingNode = queue[0];
+			let discoveredNodeLeft = visitingNode.left;
+			let discoveredNodeRight = visitingNode.right;
+			queue.splice(0, 1);
+			if (discoveredNodeLeft != null) {
+				queue.push(discoveredNodeLeft);
+			}
+			if (discoveredNodeRight != null) {
+				queue.push(discoveredNodeRight);
+			}
+			edges += 1;
+		}
+		return edges;
+	};
+
+	const depth = function getDepth(value) {
+		if (this.find(value).data != value) return null;
+		let currNode = this.root;
+		let edges = 0;
+		while (currNode.data != value) {
+			if (value > currNode.data) {
+				currNode = currNode.right;
+			} else {
+				currNode = currNode.left;
+			}
+			edges += 1;
+		}
+		return edges;
+	};
+
 	return {
 		root,
 		insert,
@@ -165,6 +199,8 @@ export const Tree = (array = []) => {
 		inOrderForEach,
 		preOrderForEach,
 		postOrderForEach,
+		height,
+		depth,
 	};
 };
 
