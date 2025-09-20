@@ -75,13 +75,16 @@ export const Tree = (array = []) => {
 				currNode = currNode.left;
 			}
 		}
-		if (currNode == null) return 'Not Found!';
+		if (currNode == null) return null;
 		return currNode;
 	};
 
-	const levelOrderForEach = function callOnEachNode(callback) {
+	const levelOrderForEach = function callOnEachNode(
+		callback,
+		node = this.root
+	) {
 		if (typeof callback != 'function') throw Error('CallBack Required!');
-		let currNode = this.root;
+		let currNode = node;
 		let queue = [currNode];
 		while (queue.length != 0) {
 			let visitingNode = queue[0];
@@ -121,43 +124,48 @@ export const Tree = (array = []) => {
 		}
 	};
 
-	const inOrderForEach = function inOrderForEach(callback, root = this.root) {
+	const inOrderForEach = function inOrderForEach(callback, node = this.root) {
 		if (typeof callback != 'function') throw Error('CallBack Required!');
-		if (root == null) {
+		if (node == null) {
 			return;
 		} else {
-			inOrderForEach(root.left);
-			callback(root);
-			inOrderForEach(root.right);
+			inOrderForEach(node.left);
+			callback(node);
+			inOrderForEach(node.right);
 		}
 	};
 
-	const preOrderForEach = function inOrderForEach(callback, root = this.root) {
+	const preOrderForEach = function inOrderForEach(callback, node = this.root) {
 		if (typeof callback != 'function') throw Error('CallBack Required!');
-		if (root == null) {
+		if (node == null) {
 			return;
 		} else {
-			callback(root);
-			inOrderForEach(root.left);
-			inOrderForEach(root.right);
+			callback(node);
+			inOrderForEach(node.left);
+			inOrderForEach(node.right);
 		}
 	};
 
-	const postOrderForEach = function inOrderForEach(callback, root = this.root) {
+	const postOrderForEach = function inOrderForEach(callback, node = this.root) {
 		if (typeof callback != 'function') throw Error('CallBack Required!');
-		if (root == null) {
+		if (node == null) {
 			return;
 		} else {
-			inOrderForEach(root.left);
-			inOrderForEach(root.right);
-			callback(root.data);
+			inOrderForEach(node.left);
+			inOrderForEach(node.right);
+			callback(node.data);
 		}
 	};
 
 	const height = function getHeight(value) {
+		if (value == null) return 0;
 		let edges = -1;
-		let valueFound = this.find(value);
-		if (valueFound.data != value) return null;
+		let valueFound = value;
+		if (typeof valueFound != 'object') {
+			let isTrue = this.find(valueFound);
+			if (isTrue == null) return null;
+			valueFound = isTrue;
+		}
 		let queue = [valueFound];
 		while (queue.length > 0) {
 			let visitingNode = queue[0];
@@ -190,6 +198,26 @@ export const Tree = (array = []) => {
 		return edges;
 	};
 
+	const isBalanced = function isItBalanced(node = this.root) {
+		debugger;
+		let queue = [node.left, node.right];
+		let difference = 0;
+		while (queue.length != 0 && difference < 1) {
+			let [leftChild, rightChild] = queue;
+			let [leftHeight, rightHeight] = [height(queue[0]), height(queue[1])];
+			if (leftHeight > rightHeight) {
+				difference = leftHeight - rightHeight;
+			} else {
+				difference = rightHeight - leftHeight;
+			}
+			queue.splice(0, 2);
+			if (leftChild != null) queue.push(leftChild.left, leftChild.right);
+			if (rightChild != null) queue.push(rightChild.left, rightChild.right);
+		}
+		if (difference > 1) return 'Not Balanced';
+		return 'Tree is Balanced';
+	};
+
 	return {
 		root,
 		insert,
@@ -201,6 +229,7 @@ export const Tree = (array = []) => {
 		postOrderForEach,
 		height,
 		depth,
+		isBalanced,
 	};
 };
 
