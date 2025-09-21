@@ -37,6 +37,7 @@ export const Tree = (array = []) => {
 	const deleteItem = function deleteNode(value) {
 		let currNode = this.root;
 		let prevNode = null;
+		// traverses the tree until it finds the value we wan't to delete.
 		while (currNode.data != value) {
 			prevNode = currNode;
 			if (value > currNode.data) {
@@ -45,11 +46,17 @@ export const Tree = (array = []) => {
 				currNode = currNode.left;
 			}
 		}
+		/* in all following conditions of deletion of node
+		prevNode serves to connect with null, next node depending on the condition */
+		// checks condition if its a leaf node
 		if (currNode.left == null && currNode.left == null) {
 			if (prevNode.left == currNode) return (prevNode.left = null);
 			return (prevNode.right = null);
+			// checks condition if it has multiple children
 		} else if (currNode.left != null && currNode.right != null) {
 			let keyNode = currNode;
+			/*  here it goes to find the bigger smallest number after current node, 
+			 in order to switch with it. */
 			currNode = currNode.right;
 			while (currNode.left != null) {
 				prevNode = currNode;
@@ -57,10 +64,12 @@ export const Tree = (array = []) => {
 			}
 			keyNode.data = currNode.data;
 			prevNode.left = null;
+			// checks if it has one children to right side
 		} else if (currNode.right == null) {
 			if (prevNode.right == currNode) return (prevNode.right = currNode.left);
 			return (prevNode.left = currNode.left);
 		} else {
+			// checks if it has one children to right side
 			if (prevNode.left == currNode) return (prevNode.left = currNode.right);
 			return (prevNode.left = currNode.left);
 		}
@@ -113,7 +122,9 @@ export const Tree = (array = []) => {
 			let discoveredNodeLeft = visitingNode.left;
 			let discoveredNodeRight = visitingNode.right;
 			callback(visitingNode);
+			// removes the visited node after the callback on it has been made
 			queue.splice(0, 1);
+			// if no its not null push the children of the visited node (discovered nodes)
 			if (discoveredNodeLeft != null) {
 				queue.push(discoveredNodeLeft);
 			}
@@ -140,12 +151,9 @@ export const Tree = (array = []) => {
 		if (node == null) {
 			return [];
 		} else {
-			let result = callback(node);
-			let newResult = result.concat(
-				preOrderForEach(callback, node.left),
-				preOrderForEach(callback, node.right)
-			);
-			return newResult;
+			callback(node);
+			preOrderForEach(callback, node.left);
+			preOrderForEach(callback, node.right);
 		}
 	};
 
@@ -161,9 +169,13 @@ export const Tree = (array = []) => {
 	};
 
 	const height = function getHeight(value) {
+		debugger;
 		if (value == null) return 0;
+		/* edges equals to -1 to prevent further calculations at the end.
+		same as array.length-1 */
 		let edges = -1;
 		let valueFound = value;
+		// set the function to be able to receive a value or a node.
 		if (typeof valueFound != 'object') {
 			let isTrue = this.find(valueFound);
 			if (isTrue == null) return null;
@@ -171,7 +183,7 @@ export const Tree = (array = []) => {
 		}
 		let queue = [valueFound];
 		while (queue.length > 0) {
-			let visitingNode = queue[0];
+			let [visitingNode] = queue;
 			let discoveredNodeLeft = visitingNode.left;
 			let discoveredNodeRight = visitingNode.right;
 			queue.splice(0, 1);
@@ -182,6 +194,7 @@ export const Tree = (array = []) => {
 				queue.push(discoveredNodeRight);
 			}
 			edges += 1;
+			// not giving proper number
 		}
 		return edges;
 	};
@@ -206,13 +219,16 @@ export const Tree = (array = []) => {
 		let difference = 0;
 		while (queue.length != 0 && difference < 1) {
 			let [leftChild, rightChild] = queue;
+			// gets the height of left path and hight of right path of current node
 			let [leftHeight, rightHeight] = [height(queue[0]), height(queue[1])];
+			// condition to always have a positive number
 			if (leftHeight > rightHeight) {
 				difference = leftHeight - rightHeight;
 			} else {
 				difference = rightHeight - leftHeight;
 			}
 			queue.splice(0, 2);
+			// here checks if there are null child's don't push to queue
 			if (leftChild != null) queue.push(leftChild.left, leftChild.right);
 			if (rightChild != null) queue.push(rightChild.left, rightChild.right);
 		}
@@ -220,17 +236,19 @@ export const Tree = (array = []) => {
 		return 'Tree is Balanced';
 	};
 
-	const rebalance = function rebalanceTree() {
-		let newArray = this.preOrderForEach(map);
-		return (this.root = buildTree(newArray));
-	};
-
-	const map = function mapArray(value, array = []) {
-		if (value != undefined) {
-			if (typeof value == 'object') value = value.data;
-			array.push(value);
-			return array;
+	const rebalance = function rebalanceTree(node = this.root) {
+		// use InOrder Traversal because it returns sorted array
+		let rebalanceArray = [];
+		if (node == null) {
+			return [];
+		} else {
+			rebalanceArray = rebalanceArray.concat(
+				rebalance(node.left),
+				rebalanceArray.concat(node),
+				rebalance(node.right)
+			);
 		}
+		return rebalanceArray;
 	};
 
 	return {
@@ -284,7 +302,7 @@ export const prettyPrint = (node, prefix = '', isLeft = true) => {
 	}
 };
 
-export const buildRandomTree = function getRandomTree() {
+export function getRandomArray() {
 	let randomArray = [];
 	for (let i = 0; i <= 100; i++) {
 		let randomNumber = Math.floor(
@@ -293,4 +311,4 @@ export const buildRandomTree = function getRandomTree() {
 		randomArray.push(randomNumber);
 	}
 	return randomArray;
-};
+}
