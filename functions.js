@@ -283,3 +283,14 @@ export const prettyPrint = (node, prefix = '', isLeft = true) => {
 		prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
 	}
 };
+
+export const buildRandomTree = function getRandomTree() {
+	let randomArray = [];
+	for (let i = 0; i <= 100; i++) {
+		let randomNumber = Math.floor(
+			Math.random() * (Math.floor(100) - Math.ceil(1)) + Math.ceil(1)
+		);
+		randomArray.push(randomNumber);
+	}
+	return randomArray;
+};
