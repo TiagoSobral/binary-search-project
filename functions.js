@@ -16,7 +16,7 @@ const Node = (data, left = null, right = null) => {
 };
 
 export const Tree = (array = []) => {
-	const root = buildTree(array);
+	let root = buildTree(array);
 
 	const insert = function insertValue(value) {
 		let currNode = this.root;
@@ -138,11 +138,14 @@ export const Tree = (array = []) => {
 	const preOrderForEach = function inOrderForEach(callback, node = this.root) {
 		if (typeof callback != 'function') throw Error('CallBack Required!');
 		if (node == null) {
-			return;
+			return [];
 		} else {
-			callback(node);
-			inOrderForEach(node.left);
-			inOrderForEach(node.right);
+			let result = callback(node);
+			let newResult = result.concat(
+				preOrderForEach(callback, node.left),
+				preOrderForEach(callback, node.right)
+			);
+			return newResult;
 		}
 	};
 
@@ -151,8 +154,8 @@ export const Tree = (array = []) => {
 		if (node == null) {
 			return;
 		} else {
-			inOrderForEach(node.left);
-			inOrderForEach(node.right);
+			postOrderForEach(callback, node.left);
+			postOrderForEach(callback, node.right);
 			callback(node.data);
 		}
 	};
@@ -199,7 +202,6 @@ export const Tree = (array = []) => {
 	};
 
 	const isBalanced = function isItBalanced(node = this.root) {
-		debugger;
 		let queue = [node.left, node.right];
 		let difference = 0;
 		while (queue.length != 0 && difference < 1) {
@@ -218,6 +220,19 @@ export const Tree = (array = []) => {
 		return 'Tree is Balanced';
 	};
 
+	const rebalance = function rebalanceTree() {
+		let newArray = this.preOrderForEach(map);
+		return (this.root = buildTree(newArray));
+	};
+
+	const map = function mapArray(value, array = []) {
+		if (value != undefined) {
+			if (typeof value == 'object') value = value.data;
+			array.push(value);
+			return array;
+		}
+	};
+
 	return {
 		root,
 		insert,
@@ -230,6 +245,7 @@ export const Tree = (array = []) => {
 		height,
 		depth,
 		isBalanced,
+		rebalance,
 	};
 };
 
