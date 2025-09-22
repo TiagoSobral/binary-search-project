@@ -234,8 +234,7 @@ export const Tree = (array = []) => {
 
 	const rebalance = function rebalanceTree() {
 		let newArray = orderedArray();
-		root = buildTree(newArray);
-		return (this.root = root);
+		return (this.root = buildTree(newArray));
 	};
 
 	// helper function to get the current tree in a sorted array.
