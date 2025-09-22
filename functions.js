@@ -208,22 +208,25 @@ export const Tree = (array = []) => {
 	};
 
 	const isBalanced = function isItBalanced(node = root) {
-		let queue = [node.left, node.right];
+		let queue = [node];
 		let difference = 0;
-		while (queue.length != 0 && difference < 1) {
-			let [leftChild, rightChild] = queue;
-			// gets the height of left path and hight of right path of current node
-			let [leftHeight, rightHeight] = [height(queue[0]), height(queue[1])];
+		while (queue.length != 0 && difference < 2) {
+			let visitedNode = queue[0];
+			let leftChild = visitedNode.left;
+			let rightChild = visitedNode.right;
+			let leftHeight = height(leftChild);
+			let rightHeight = height(rightChild);
 			// condition to always have a positive number
-			if (leftHeight > rightHeight) {
+			let biggestHeight = Math.max(leftHeight, rightHeight);
+			if (leftHeight == biggestHeight) {
 				difference = leftHeight - rightHeight;
 			} else {
 				difference = rightHeight - leftHeight;
 			}
-			queue.splice(0, 2);
+			queue.splice(0, 1);
 			// here checks if there are null child's don't push to queue
-			if (leftChild != null) queue.push(leftChild.left, leftChild.right);
-			if (rightChild != null) queue.push(rightChild.left, rightChild.right);
+			if (leftChild != null) queue.push(leftChild);
+			if (rightChild != null) queue.push(rightChild);
 		}
 		if (difference > 1) return 'Not Balanced';
 		return 'Tree is Balanced';
@@ -231,7 +234,8 @@ export const Tree = (array = []) => {
 
 	const rebalance = function rebalanceTree() {
 		let newArray = orderedArray();
-		return (this.root = buildTree(newArray));
+		root = buildTree(newArray);
+		return (this.root = root);
 	};
 
 	// helper function to get the current tree in a sorted array.
