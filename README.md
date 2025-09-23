@@ -50,7 +50,7 @@ The project implements the factories:
                     └── 2
                         └── 1
 ```
-9. **`rebalance`** → `Rebalances` an unbalanced tree.
+10. **`rebalance`** → `Rebalances` an unbalanced tree.
 
 ## 👷🏻 Own Added Methods
 1. **`orderedArray`** → `Returns` an sorted array by using the inOrder traversal method. It is called in `rebalance`.
